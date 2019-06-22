@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 
 function App() {
   return (
     <div>
-    <h1>Hello</h1>
+      <h4>Keep clicking anywhere</h4>
     </div>
   );
 }

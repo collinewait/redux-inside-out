@@ -1,9 +1,16 @@
-import { createStore } from 'redux';
-import counterReducer from './reducer.js';
-import { composeWithDevTools } from 'redux-devtools-extension';
+import { createStore } from "redux";
+import counterReducer from "./reducer.js";
+import { composeWithDevTools } from "redux-devtools-extension";
 
 const store = createStore(counterReducer, composeWithDevTools());
-console.log(store.getState());
-store.dispatch({ type: 'INCREMENT'});
-console.log(store.getState());
+
+const displayValue = () => {
+    document.body.innerText = store.getState();
+}
+
+store.subscribe(displayValue);
+
+document.addEventListener("click", () => {
+  store.dispatch({ type: "INCREMENT" });
+});
 export default store;
