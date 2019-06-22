@@ -1,12 +1,12 @@
-export default function counterReducer(state, action) {
-  if (action.type === undefined) {
-    return 0;
+const counterReducer = (state = 0, action) => {
+  switch (action.type) {
+    case "INCREMENT":
+      return state + 1;
+    case "DECREMENT":
+      return state - 1;
+    default:
+      return state;
   }
-  if (action.type === "INCREMENT") {
-    return state + 1;
-  } else if (action.type === "DECREMENT") {
-    return state - 1;
-  } else {
-    return state;
-  }
-}
+};
+
+export default counterReducer;
