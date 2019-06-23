@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import PropTypes from 'prop-types';
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
 let nextTodoId = 0;
 const Link = ({ active, children, onClick }) => {
@@ -81,40 +82,28 @@ const TodoList = ({ todos, toggleTodo }) => (
   </ul>
 );
 
-class VisibleTodoList extends Component {
-  componentDidMount() {
-    const { store } = this.context;
-    this.unsubscribe = store.subscribe(() => this.forceUpdate());
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
-  render() {
-    const { store } = this.context;
-    const { todos, visibilityFilter } = store.getState();
-    return (
-      <TodoList
-        todos={getVisibleTodos(todos, visibilityFilter)}
-        toggleTodo={id => {
-          store.dispatch({
-            type: "TOGGLE_TODO",
-            id
-          });
-        }}
-      />
-    );
-  }
-}
-
-// if we forget to declare the relevant contextTypes,
-// the component will not receive the relevant context
-// it is essential to declare them
-VisibleTodoList.contextTypes = {
-  store: PropTypes.object
+const mapStateToProps = state => {
+  return {
+    todos: getVisibleTodos(state.todos, state.visibilityFilter)
+  };
 };
 
-// the second argument is the context
+const mapDispatchToProps = dispatch => {
+  return {
+    toggleTodo: id => {
+      dispatch({
+        type: "TOGGLE_TODO",
+        id
+      });
+    }
+  };
+};
+
+const VisibleTodoList = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TodoList);
+
 const AddTodo = (props, { store }) => {
   let input;
   return (
@@ -146,16 +135,9 @@ AddTodo.contextTypes = {
 
 const Footer = () => (
   <p>
-    Show:{" "}
-    <FilterLink filter="SHOW_ALL">
-      All
-    </FilterLink>{" "}
-    <FilterLink filter="SHOW_ACTIVE">
-      Active
-    </FilterLink>{" "}
-    <FilterLink filter="SHOW_COMPLETED">
-      Completed
-    </FilterLink>
+    Show: <FilterLink filter="SHOW_ALL">All</FilterLink>{" "}
+    <FilterLink filter="SHOW_ACTIVE">Active</FilterLink>{" "}
+    <FilterLink filter="SHOW_COMPLETED">Completed</FilterLink>
   </p>
 );
 const TodoApp = () => (
