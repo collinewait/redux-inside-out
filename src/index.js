@@ -5,7 +5,7 @@ import "./index.css";
 //import App from "./App";
 import TodoApp from "./TodoApp";
 import * as serviceWorker from "./serviceWorker";
-//import { Provider } from "react-redux";
+import { Provider } from "react-redux";
 import store from "./store";
 // const render = () => {
 //   ReactDOM.render(
@@ -24,23 +24,23 @@ import store from "./store";
 //   );
 // };
 
-class Provider extends Component {
-  getChildContext() {
-    // method to be used by react. Children and grand children will receive the context object with the store property
-    return {
-      store: this.props.store
-    };
-  }
-  render() {
-    return this.props.children;
-  }
-}
+// class Provider extends Component {
+//   getChildContext() {
+//     // method to be used by react. Children and grand children will receive the context object with the store property
+//     return {
+//       store: this.props.store
+//     };
+//   }
+//   render() {
+//     return this.props.children;
+//   }
+// }
 
 // for context to work, you have to specify childContextTypes
 // on the component that specifies getChildContext
-Provider.childContextTypes = {
-  store: PropTypes.object // essential fot the context to be turned on
-};
+// Provider.childContextTypes = {
+//   store: PropTypes.object // essential fot the context to be turned on
+// };
 
 ReactDOM.render(
   <Provider store={store}>
