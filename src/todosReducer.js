@@ -1,3 +1,4 @@
+import { combineReducers } from "redux";
 //  creating and updating a todo in response to an action is
 // is a separate operation and needs to be handles by a separate
 //function called "todo" Pattern: Reducer composition
@@ -45,15 +46,20 @@ const visibilityFilter = (state = "SHOW_ALL", action) => {
   }
 };
 
-export const todoApp = (state = {}, action) => {
-    return {
-        todos: todos(
-            state.todos,
-            action
-        ),
-        visibilityFilter: visibilityFilter(
-            state.visibilityFilter,
-            action
-        )
-    }
-}
+// export const todoApp = (state = {}, action) => {
+//     return {
+//         todos: todos(
+//             state.todos,
+//             action
+//         ),
+//         visibilityFilter: visibilityFilter(
+//             state.visibilityFilter,
+//             action
+//         )
+//     }
+// }
+
+export const todoApp = combineReducers ({
+    todos,
+    visibilityFilter
+});
