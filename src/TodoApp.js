@@ -34,6 +34,25 @@ const getVisibleTodos = (todos, filter) => {
       return todos.filter(todo => !todo.completed);
   }
 };
+
+const Todo = ({ onClick, completed, text }) => (
+  <li
+    onClick={onClick}
+    style={{
+      textDecoration: completed ? "line-through" : "none"
+    }}
+  >
+    {text}
+  </li>
+);
+
+const TodoList = ({ todos, toggleTodo }) => (
+  <ul>
+    {todos.map(todo => (
+      <Todo key={todo.id} {...todo} onClick={() => toggleTodo(todo.id)} />
+    ))}
+  </ul>
+);
 class TodoApp extends Component {
   render() {
     const {
@@ -49,19 +68,7 @@ class TodoApp extends Component {
       <div>
         <input id="input1" onChange={handleChange} />
         <button onClick={addTodo}>Add Todo</button>
-        <ul>
-          {visibleTodos.map(todo => (
-            <li
-              key={todo.id}
-              onClick={() => toggleTodo(todo.id)}
-              style={{
-                textDecoration: todo.completed ? "line-through" : "none"
-              }}
-            >
-              {todo.text}
-            </li>
-          ))}
-        </ul>
+        <TodoList todos={visibleTodos} toggleTodo={toggleTodo} />
         <p>
           Show:{" "}
           <FilterLink
