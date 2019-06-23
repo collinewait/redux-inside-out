@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import store from "./store";
 
+let nextTodoId = 0;
 const Link = ({ active, children, onClick }) => {
   if (active) {
     return <span>{children}</span>;
@@ -20,6 +20,7 @@ const Link = ({ active, children, onClick }) => {
 
 class FilterLink extends Component {
   componentDidMount() {
+    const { store } = this.props;
     this.unsubscribe = store.subscribe(() => this.forceUpdate());
   }
 
@@ -27,7 +28,7 @@ class FilterLink extends Component {
     this.unsubscribe();
   }
   render() {
-    const { filter, children } = this.props;
+    const { filter, children, store } = this.props;
     const state = store.getState().visibilityFilter;
     return (
       <Link
@@ -69,13 +70,40 @@ const Todo = ({ onClick, completed, text }) => (
 
 const TodoList = ({ todos, toggleTodo }) => (
   <ul>
-    {todos && todos.map(todo => (
-      <Todo key={todo.id} {...todo} onClick={() => toggleTodo(todo.id)} />
-    ))}
+    {todos &&
+      todos.map(todo => (
+        <Todo key={todo.id} {...todo} onClick={() => toggleTodo(todo.id)} />
+      ))}
   </ul>
 );
 
-const AddTodo = ({ addTodo }) => {
+class VisibleTodoList extends Component {
+  componentDidMount() {
+    const { store } = this.props;
+    this.unsubscribe = store.subscribe(() => this.forceUpdate());
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+  render() {
+    const { store } = this.props;
+    const { todos, visibilityFilter } = store.getState();
+    return (
+      <TodoList
+        todos={getVisibleTodos(todos, visibilityFilter)}
+        toggleTodo={id => {
+          store.dispatch({
+            type: "TOGGLE_TODO",
+            id
+          });
+        }}
+      />
+    );
+  }
+}
+
+const AddTodo = ({ store }) => {
   let input;
   return (
     <>
@@ -84,26 +112,41 @@ const AddTodo = ({ addTodo }) => {
           input = node;
         }}
       />
-      <button onClick={() => addTodo(input)}>Add Todo</button>
+      <button
+        onClick={() => {
+          store.dispatch({
+            type: "ADD_TODO",
+            text: input.value,
+            id: nextTodoId++
+          });
+          input.value = "";
+        }}
+      >
+        Add Todo
+      </button>
     </>
   );
 };
 
-const Footer = () => (
+const Footer = ({ store }) => (
   <p>
-    Show: <FilterLink filter="SHOW_ALL">All</FilterLink>{" "}
-    <FilterLink filter="SHOW_ACTIVE">Active</FilterLink>{" "}
-    <FilterLink filter="SHOW_COMPLETED">Completed</FilterLink>
+    Show:{" "}
+    <FilterLink filter="SHOW_ALL" store={store}>
+      All
+    </FilterLink>{" "}
+    <FilterLink filter="SHOW_ACTIVE" store={store}>
+      Active
+    </FilterLink>{" "}
+    <FilterLink filter="SHOW_COMPLETED" store={store}>
+      Completed
+    </FilterLink>
   </p>
 );
-const TodoApp = ({ addTodo, todos, toggleTodo, visibilityFilter }) => (
+const TodoApp = ({ store }) => (
   <div>
-    <AddTodo addTodo={addTodo} />
-    <TodoList
-      todos={getVisibleTodos(todos, visibilityFilter)}
-      toggleTodo={toggleTodo}
-    />
-    <Footer />
+    <AddTodo store={store} />
+    <VisibleTodoList store={store} />
+    <Footer store={store} />
   </div>
 );
 
