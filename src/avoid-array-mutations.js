@@ -1,4 +1,3 @@
 export const addCounter = (list) => {
-    list.push(0);
-    return list;
+    return list.concat([0]); //use concat which does not mutate the original array
 }
