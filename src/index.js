@@ -52,6 +52,12 @@ const render = () => {
       }}
       todos={store.getState().todos}
       handleChange={handleChange}
+      toggleTodo={(id) => {
+          store.dispatch({
+              type: "TOGGLE_TODO",
+              id
+          })
+      }}
     />,
     document.getElementById("root")
   );
