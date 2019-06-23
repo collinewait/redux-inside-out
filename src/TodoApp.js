@@ -20,37 +20,25 @@ const Link = ({ active, children, onClick }) => {
   );
 };
 
-class FilterLink extends Component {
-  componentDidMount() {
-    const { store } = this.context;
-    this.unsubscribe = store.subscribe(() => this.forceUpdate());
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
-  render() {
-    const { filter, children } = this.props;
-    const { store } = this.context;
-    const state = store.getState().visibilityFilter;
-    return (
-      <Link
-        active={filter === state}
-        onClick={() => {
-          store.dispatch({
-            type: "SET_VISIBILITY_FILTER",
-            filter
-          });
-        }}
-      >
-        {children}
-      </Link>
-    );
-  }
-}
-FilterLink.contextTypes = {
-  store: PropTypes.object
+const mapStateToLinkProps = (state, ownProps) => {
+  return {
+    active: ownProps.filter === state.visibilityFilter
+  };
 };
+const mapDispatchToLinkProps = (dispatch, ownProps) => {
+  return {
+    onClick: () => {
+      dispatch({
+        type: "SET_VISIBILITY_FILTER",
+        filter: ownProps.filter
+      });
+    }
+  };
+};
+const FilterLink = connect(
+  mapStateToLinkProps,
+  mapDispatchToLinkProps
+)(Link);
 const getVisibleTodos = (todos, filter) => {
   switch (filter) {
     case "SHOW_ALL":
@@ -125,7 +113,7 @@ let AddTodo = ({ dispatch }) => {
       </button>
     </>
   );
-}; 
+};
 // AddTodo = connect(
 //   null, // makes sure there is no subscription to the store
 //   dispatch => {
@@ -133,7 +121,7 @@ let AddTodo = ({ dispatch }) => {
 //   }
 // )(AddTodo)
 
-AddTodo = connect()(AddTodo) // dispatch will be injected as a prop
+AddTodo = connect()(AddTodo); // dispatch will be injected as a prop
 const Footer = () => (
   <p>
     Show: <FilterLink filter="SHOW_ALL">All</FilterLink>{" "}
