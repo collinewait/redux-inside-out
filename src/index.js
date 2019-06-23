@@ -50,12 +50,18 @@ const render = () => {
         input.value = "";
         typedText = "";
       }}
-      todos={store.getState().todos}
+      {...store.getState()}
       handleChange={handleChange}
       toggleTodo={(id) => {
           store.dispatch({
               type: "TOGGLE_TODO",
               id
+          })
+      }}
+      setVisibilityFilter={(filter) => {
+          store.dispatch({
+              type: 'SET_VISIBILITY_FILTER',
+              filter
           })
       }}
     />,
