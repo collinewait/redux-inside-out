@@ -1,7 +1,7 @@
 import deepFreeze from "deep-freeze";
 import { addCounter } from "./avoid-array-mutations";
 
-it("", () => {
+it("adds a number to the list without mutating the original array", () => {
   const listBefore = [];
   const listAfter = [0];
 
