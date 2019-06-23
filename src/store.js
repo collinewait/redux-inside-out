@@ -30,39 +30,39 @@ import { composeWithDevTools } from "redux-devtools-extension";
 //   return { getState, dispatch, subscribe };
 // };
 
-const store = createStore(counterReducer); // left out not to break counter and for demo. We use one store in applications
-const storeA = createStore(todoApp); 
+//const store = createStore(counterReducer); // left out not to break counter and for demo. We use one store in applications
+const store = createStore(todoApp); 
 
-console.log('Initial State:');
-console.log(storeA.getState())
-console.log('-------------');
+// console.log('Initial State:');
+// console.log(store.getState())
+// console.log('-------------');
 
-console.log('Dispatching ADD_TODO');
-storeA.dispatch({
-    type: 'ADD_TODO',
-    id: 0,
-    text: 'Redux inside out'
-})
-console.log('Current State:');
-console.log(storeA.getState())
-console.log('-------------');
+// console.log('Dispatching ADD_TODO');
+// store.dispatch({
+//     type: 'ADD_TODO',
+//     id: 0,
+//     text: 'Redux inside out'
+// })
+// console.log('Current State:');
+// console.log(store.getState())
+// console.log('-------------');
 
-console.log('Dispatching TOGGLE_TODO')
-storeA.dispatch({
-    type: 'TOGGLE_TODO',
-    id: 0,
-})
-console.log('Current State:');
-console.log(storeA.getState())
-console.log('-------------');
+// console.log('Dispatching TOGGLE_TODO')
+// store.dispatch({
+//     type: 'TOGGLE_TODO',
+//     id: 0,
+// })
+// console.log('Current State:');
+// console.log(store.getState())
+// console.log('-------------');
 
-console.log('Dispatching SET_VISIBILITY_FILTER')
-storeA.dispatch({
-    type: 'SET_VISIBILITY_FILTER',
-    filter: 'SHOW_COMPLETED',
-})
-console.log('Current State:');
-console.log(storeA.getState())
-console.log('-------------');
+// console.log('Dispatching SET_VISIBILITY_FILTER')
+// store.dispatch({
+//     type: 'SET_VISIBILITY_FILTER',
+//     filter: 'SHOW_COMPLETED',
+// })
+// console.log('Current State:');
+// console.log(store.getState())
+// console.log('-------------');
 
 export default store;
