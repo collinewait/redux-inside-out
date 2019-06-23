@@ -25,44 +25,26 @@ import store from "./store";
 //   );
 // };
 
-// For demo purposes only. 
+// For demo purposes only.
 // There is a better way of handling changes and updating states
 let nextTodoId = 0;
-let typedText = "";
- 
-const handleChange = event => {
-  event.persist();
-  typedText = event.target.value;
-};
 const render = () => {
   ReactDOM.render(
     <TodoApp
-      addTodo={() => {
+      addTodo={input => {
         store.dispatch({
           type: "ADD_TODO",
-          text: typedText,
+          text: input.value,
           id: nextTodoId++
         });
-        // Do not write this kind of code in production.
-        // You can work with state values
-        // I wrote it for fun 😁:) 
-        const input = document.getElementById("input1");
         input.value = "";
-        typedText = "";
       }}
       {...store.getState()}
-      handleChange={handleChange}
-      toggleTodo={(id) => {
-          store.dispatch({
-              type: "TOGGLE_TODO",
-              id
-          })
-      }}
-      setVisibilityFilter={(filter) => {
-          store.dispatch({
-              type: 'SET_VISIBILITY_FILTER',
-              filter
-          })
+      toggleTodo={id => {
+        store.dispatch({
+          type: "TOGGLE_TODO",
+          id
+        });
       }}
     />,
     document.getElementById("root")
