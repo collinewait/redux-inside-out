@@ -1,11 +1,11 @@
 import React from "react";
 
-function App() {
-  return (
-    <div>
-      <h4>Keep clicking anywhere</h4>
-    </div>
-  );
-}
+const App = ({ value, onIncrement, onDecrement }) => (
+  <>
+    <h1>{value}</h1>
+    <button onClick={onIncrement}>+</button>
+    <button onClick={onDecrement}>-</button>
+  </>
+);
 
 export default App;
