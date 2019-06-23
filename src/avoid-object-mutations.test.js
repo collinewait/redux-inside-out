@@ -13,5 +13,7 @@ it("toggles todo without mutating the object", () => {
     completed: true
   };
 
+  deepFreeze(todoBefore);
+
   expect(toggleTodo(todoBefore)).toEqual(todoAfter);
 });
