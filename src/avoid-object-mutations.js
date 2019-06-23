@@ -1,5 +1,6 @@
 export const toggleTodo = (todo) => {
-    return Object.assign({}, todo, {
+    return {
+        ...todo,
         completed: !todo.completed
-    });
+    };
 };
