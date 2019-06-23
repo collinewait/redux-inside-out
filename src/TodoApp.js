@@ -82,13 +82,12 @@ const TodoList = ({ todos, toggleTodo }) => (
   </ul>
 );
 
-const mapStateToProps = state => {
+const mapStateToTodoListProps = state => {
   return {
     todos: getVisibleTodos(state.todos, state.visibilityFilter)
   };
 };
-
-const mapDispatchToProps = dispatch => {
+const mapDispatchToTodoListProps = dispatch => {
   return {
     toggleTodo: id => {
       dispatch({
@@ -98,13 +97,12 @@ const mapDispatchToProps = dispatch => {
     }
   };
 };
-
 const VisibleTodoList = connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToTodoListProps,
+  mapDispatchToTodoListProps
 )(TodoList);
 
-const AddTodo = (props, { store }) => {
+let AddTodo = ({ dispatch }) => {
   let input;
   return (
     <>
@@ -115,7 +113,7 @@ const AddTodo = (props, { store }) => {
       />
       <button
         onClick={() => {
-          store.dispatch({
+          dispatch({
             type: "ADD_TODO",
             text: input.value,
             id: nextTodoId++
@@ -127,12 +125,15 @@ const AddTodo = (props, { store }) => {
       </button>
     </>
   );
-};
+}; 
+// AddTodo = connect(
+//   null, // makes sure there is no subscription to the store
+//   dispatch => {
+//     return {dispatch}
+//   }
+// )(AddTodo)
 
-AddTodo.contextTypes = {
-  store: PropTypes.object
-};
-
+AddTodo = connect()(AddTodo) // dispatch will be injected as a prop
 const Footer = () => (
   <p>
     Show: <FilterLink filter="SHOW_ALL">All</FilterLink>{" "}
