@@ -4,8 +4,14 @@ import "./index.css";
 //import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import configureStore from "./configureStore";
-import Root from './Root';
+import { fetchTodos } from "./fakeRemote";
+import Root from "./Root";
+
+
 const store = configureStore();
+
+
+fetchTodos('all').then(todos => console.log(todos))
 // const render = () => {
 //   ReactDOM.render(
 //     <Provider store={store}>
@@ -41,10 +47,7 @@ const store = configureStore();
 //   store: PropTypes.object // essential fot the context to be turned on
 // };
 
-ReactDOM.render(
-  <Root store={store}/>,
-  document.getElementById("root")
-);
+ReactDOM.render(<Root store={store} />, document.getElementById("root"));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
