@@ -6,7 +6,8 @@ import "./index.css";
 import TodoApp from "./TodoApp";
 import * as serviceWorker from "./serviceWorker";
 import { Provider } from "react-redux";
-import store from "./store";
+import configureStore from "./configureStore";
+const store = configureStore();
 // const render = () => {
 //   ReactDOM.render(
 //     <Provider store={store}>

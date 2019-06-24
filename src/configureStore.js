@@ -5,7 +5,7 @@ import ReactDOM from "react-dom";
 import { createStore } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { loadState, saveState } from "./localStorage";
-import throttle  from "lodash/throttle";
+import throttle from "lodash/throttle";
 
 // const createStore = reducer => {
 //   let state;
@@ -33,23 +33,6 @@ import throttle  from "lodash/throttle";
 // };
 
 //const store = createStore(counterReducer); // left out not to break counter and for demo. We use one store in applications
-
-const persistedState = loadState();
-
-// We can pass the persisted state as the second argument to createStore
-// and it will override the value specified by the reducers
-// DO NOT pass the initial state to creeateStore, use it in reducers.
-// Passing the persisted state is fine since it was obtained from the store itself
-const store = createStore(todoApp, persistedState);
-
-store.subscribe(
-  // wrapping the callback in a throttle call ensures that the inner
-  // function passed is not going to be called more often than
-  // the number of ms specified
-  throttle(() => {
-    saveState({ todos: store.getState().todos });
-  }, 1000)
-);
 
 // console.log('Initial State:');
 // console.log(store.getState())
@@ -83,4 +66,23 @@ store.subscribe(
 // console.log(store.getState())
 // console.log('-------------');
 
-export default store;
+const configureStore = () => {
+  const persistedState = loadState();
+  // We can pass the persisted state as the second argument to createStore
+  // and it will override the value specified by the reducers
+  // DO NOT pass the initial state to creeateStore, use it in reducers.
+  // Passing the persisted state is fine since it was obtained from the store itself
+  const store = createStore(todoApp, persistedState);
+
+  store.subscribe(
+    // wrapping the callback in a throttle call ensures that the inner
+    // function passed is not going to be called more often than
+    // the number of ms specified
+    throttle(() => {
+      saveState({ todos: store.getState().todos });
+    }, 1000)
+  );
+  return store;
+};
+
+export default configureStore;
