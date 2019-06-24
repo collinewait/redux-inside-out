@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import FilterLink from "./FilterLink";
 import { withRouter } from "react-router-dom";
+import { normalize } from "normalizr";
+import * as schema from "./schema";
 import {
   getVisibleTodos,
   getIsFetching,
@@ -14,7 +16,7 @@ const addTodo = text => dispatch =>
   api.addTodo(text).then(response => {
     dispatch({
       type: "ADD_TODO_SUCCESS",
-      response
+      response: normalize(response, schema.todo)
     });
   });
 
@@ -41,7 +43,7 @@ const fetchTodos = filter => (dispatch, getState) => {
   dispatch(requestTodos(filter));
   return api.fetchTodos(filter).then(
     response => {
-      dispatch(receiveTodos(filter, response));
+      dispatch(receiveTodos(filter, normalize(response, schema.arrayOfTodos)));
     },
     error => {
       dispatch({
