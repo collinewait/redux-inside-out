@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import "./index.css";
 //import App from "./App";
 import TodoApp from "./TodoApp";
