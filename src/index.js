@@ -4,14 +4,11 @@ import "./index.css";
 //import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import configureStore from "./configureStore";
-import { fetchTodos } from "./fakeRemote";
 import Root from "./Root";
 
 
 const store = configureStore();
 
-
-fetchTodos('all').then(todos => console.log(todos))
 // const render = () => {
 //   ReactDOM.render(
 //     <Provider store={store}>
