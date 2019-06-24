@@ -1,12 +1,10 @@
-import React, { Component } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
-import PropTypes from "prop-types";
 import "./index.css";
 //import App from "./App";
-import TodoApp from "./TodoApp";
 import * as serviceWorker from "./serviceWorker";
-import { Provider } from "react-redux";
 import configureStore from "./configureStore";
+import Root from './Root';
 const store = configureStore();
 // const render = () => {
 //   ReactDOM.render(
@@ -44,9 +42,7 @@ const store = configureStore();
 // };
 
 ReactDOM.render(
-  <Provider store={store}>
-    <TodoApp />
-  </Provider>,
+  <Root store={store}/>,
   document.getElementById("root")
 );
 
