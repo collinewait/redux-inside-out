@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { v4 } from "node-uuid";
 import FilterLink from "./FilterLink";
+import { withRouter } from "react-router-dom";
 
 const addTodo = text => ({
   type: "ADD_TODO",
@@ -57,18 +58,20 @@ const TodoList = ({ todos, toggleTodo }) => (
   </ul>
 );
 
-const mapStateToTodoListProps = (state, ownProps) => ({
-  todos: getVisibleTodos(state.todos, ownProps.filter)
+const mapStateToTodoListProps = (state, { match: { params } }) => ({
+  todos: getVisibleTodos(state.todos, params.filter || 'all')
 });
 const mapDispatchToTodoListProps = dispatch => ({
   toggleTodo(id) {
     dispatch(toggleTodo(id));
   }
 });
-const VisibleTodoList = connect(
-  mapStateToTodoListProps,
-  mapDispatchToTodoListProps
-)(TodoList);
+const VisibleTodoList = withRouter(
+  connect(
+    mapStateToTodoListProps,
+    mapDispatchToTodoListProps
+  )(TodoList)
+);
 
 let AddTodo = ({ dispatch }) => {
   let input;
@@ -105,10 +108,10 @@ const Footer = () => (
     <FilterLink filter="completed">Completed</FilterLink>
   </p>
 );
-const TodoApp = ({ match: { params } }) => (
+const TodoApp = () => (
   <div>
     <AddTodo />
-    <VisibleTodoList filter={(params.filter) || "all"} />
+    <VisibleTodoList />
     <Footer />
   </div>
 );
