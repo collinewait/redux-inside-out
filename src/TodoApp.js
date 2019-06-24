@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
-import { v4 } from 'node-uuid';
-import FilterLink from './FilterLink'
+import { v4 } from "node-uuid";
+import FilterLink from "./FilterLink";
 
 const addTodo = text => ({
   type: "ADD_TODO",
@@ -28,11 +28,11 @@ const toggleTodo = id => ({
 // )(Link);
 const getVisibleTodos = (todos, filter) => {
   switch (filter) {
-    case "SHOW_ALL":
+    case "all":
       return todos;
-    case "SHOW_COMPLETED":
+    case "completed":
       return todos.filter(todo => todo.completed);
-    case "SHOW_ACTIVE":
+    case "active":
       return todos.filter(todo => !todo.completed);
   }
 };
@@ -57,8 +57,8 @@ const TodoList = ({ todos, toggleTodo }) => (
   </ul>
 );
 
-const mapStateToTodoListProps = state => ({
-  todos: getVisibleTodos(state.todos, state.visibilityFilter)
+const mapStateToTodoListProps = (state, ownProps) => ({
+  todos: getVisibleTodos(state.todos, ownProps.filter)
 });
 const mapDispatchToTodoListProps = dispatch => ({
   toggleTodo(id) {
@@ -101,14 +101,14 @@ AddTodo = connect()(AddTodo); // dispatch will be injected as a prop
 const Footer = () => (
   <p>
     Show: <FilterLink filter="all">All</FilterLink>{" "}
-    <FilterLink filter="actve">Active</FilterLink>{" "}
+    <FilterLink filter="active">Active</FilterLink>{" "}
     <FilterLink filter="completed">Completed</FilterLink>
   </p>
 );
-const TodoApp = () => (
+const TodoApp = ({ match: { params } }) => (
   <div>
     <AddTodo />
-    <VisibleTodoList />
+    <VisibleTodoList filter={(params.filter) || "all"} />
     <Footer />
   </div>
 );

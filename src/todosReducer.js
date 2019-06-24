@@ -1,4 +1,4 @@
-//import { combineReducers } from "redux";
+import { combineReducers } from "redux";
 //  creating and updating a todo in response to an action is
 // is a separate operation and needs to be handles by a separate
 //function called "todo" Pattern: Reducer composition
@@ -37,15 +37,6 @@ export const todos = (state = [], action) => {
   }
 };
 
-const visibilityFilter = (state = "SHOW_ALL", action) => {
-  switch (action.type) {
-    case "SET_VISIBILITY_FILTER":
-      return action.filter;
-    default:
-      return state;
-  }
-};
-
 // export const todoApp = (state = {}, action) => {
 //     return {
 //         todos: todos(
@@ -59,16 +50,15 @@ const visibilityFilter = (state = "SHOW_ALL", action) => {
 //     }
 // }
 
-const combineReducers = reducers => {
-  return (state = {}, action) => {// the return value is supposed to be the reducer itself
-    return Object.keys(reducers).reduce((nextState, key) => {
-      nextState[key] = reducers[key](state[key], action);
-      return nextState; // return the next accumulated value
-    }, {}); // return the initial next state {} before all the keys are processed. {} is to be filled gradually by reduce  
-  };
-};
+// const combineReducers = reducers => {
+//   return (state = {}, action) => {// the return value is supposed to be the reducer itself
+//     return Object.keys(reducers).reduce((nextState, key) => {
+//       nextState[key] = reducers[key](state[key], action);
+//       return nextState; // return the next accumulated value
+//     }, {}); // return the initial next state {} before all the keys are processed. {} is to be filled gradually by reduce  
+//   };
+// };
 
 export const todoApp = combineReducers({
   todos,
-  visibilityFilter
 });
