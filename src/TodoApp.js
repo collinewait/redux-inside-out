@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { v4 } from 'node-uuid';
+import FilterLink from './FilterLink'
 
 const addTodo = text => ({
   type: "ADD_TODO",
@@ -8,45 +9,23 @@ const addTodo = text => ({
   text
 });
 
-const setVisibilityFilter = filter => ({
-  type: "SET_VISIBILITY_FILTER",
-  filter
-});
-
 const toggleTodo = id => ({
   type: "TOGGLE_TODO",
   id
 });
 
-const Link = ({ active, children, onClick }) => {
-  if (active) {
-    return <span>{children}</span>;
-  }
-  return (
-    <a
-      href="#"
-      onClick={e => {
-        e.preventDefault();
-        onClick();
-      }}
-    >
-      {children}
-    </a>
-  );
-};
-
-const mapStateToLinkProps = (state, ownProps) => ({
-  active: ownProps.filter === state.visibilityFilter
-});
-const mapDispatchToLinkProps = (dispatch, ownProps) => ({
-  onClick() {
-    dispatch(setVisibilityFilter(ownProps.filter));
-  }
-});
-const FilterLink = connect(
-  mapStateToLinkProps,
-  mapDispatchToLinkProps
-)(Link);
+// const mapStateToLinkProps = (state, ownProps) => ({
+//   active: ownProps.filter === state.visibilityFilter
+// });
+// const mapDispatchToLinkProps = (dispatch, ownProps) => ({
+//   onClick() {
+//     dispatch(setVisibilityFilter(ownProps.filter));
+//   }
+// });
+// const FilterLink = connect(
+//   mapStateToLinkProps,
+//   mapDispatchToLinkProps
+// )(Link);
 const getVisibleTodos = (todos, filter) => {
   switch (filter) {
     case "SHOW_ALL":
@@ -121,9 +100,9 @@ let AddTodo = ({ dispatch }) => {
 AddTodo = connect()(AddTodo); // dispatch will be injected as a prop
 const Footer = () => (
   <p>
-    Show: <FilterLink filter="SHOW_ALL">All</FilterLink>{" "}
-    <FilterLink filter="SHOW_ACTIVE">Active</FilterLink>{" "}
-    <FilterLink filter="SHOW_COMPLETED">Completed</FilterLink>
+    Show: <FilterLink filter="all">All</FilterLink>{" "}
+    <FilterLink filter="actve">Active</FilterLink>{" "}
+    <FilterLink filter="completed">Completed</FilterLink>
   </p>
 );
 const TodoApp = () => (
