@@ -65,6 +65,16 @@ import { composeWithDevTools } from "redux-devtools-extension";
 // console.log('-------------');
 
 // Now days we can easily use redux devtools
+const addPromiseSupportToDispatch = store => {
+  const rawDispatch = store.dispatch;
+  return action => {
+    console.log('Actionnnn', action)
+    if (typeof action.then === "function") {
+      return action.then(rawDispatch);
+    }
+    return rawDispatch(action);
+  };
+};
 const addLoggingToDispatch = store => {
   const rawDispatch = store.dispatch;
   if (!console.group) {
@@ -91,6 +101,8 @@ const configureStore = () => {
   if (process.env.NODE_ENV !== "production") {
     store.dispatch = addLoggingToDispatch(store);
   }
+
+  store.dispatch = addPromiseSupportToDispatch(store);
 
   return store;
 };
