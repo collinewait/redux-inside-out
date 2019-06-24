@@ -66,6 +66,23 @@ import throttle from "lodash/throttle";
 // console.log(store.getState())
 // console.log('-------------');
 
+// Now days we can easily use redux devtools
+const addLoggingToDispatch = store => {
+  const rawDispatch = store.dispatch;
+  if (!console.group) {
+    return rawDispatch;
+  }
+  return action => {
+    console.group(action.type);
+    console.log("%c prev state", "color: gray", store.getState());
+    console.log("%c action", "color: blue", action);
+    const returnValue = rawDispatch(action);
+    console.log("%c next state", "color: green", store.getState());
+    console.groupEnd(action.type);
+    return returnValue;
+  };
+};
+
 const configureStore = () => {
   const persistedState = loadState();
   // We can pass the persisted state as the second argument to createStore
@@ -73,6 +90,10 @@ const configureStore = () => {
   // DO NOT pass the initial state to creeateStore, use it in reducers.
   // Passing the persisted state is fine since it was obtained from the store itself
   const store = createStore(todoApp, persistedState);
+
+  if (process.env.NODE_ENV !== "production") {
+    store.dispatch = addLoggingToDispatch(store);
+  }
 
   store.subscribe(
     // wrapping the callback in a throttle call ensures that the inner
