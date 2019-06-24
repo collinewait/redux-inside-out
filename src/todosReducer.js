@@ -59,6 +59,21 @@ export const todos = (state = [], action) => {
 //   };
 // };
 
+export const getVisibleTodosImpl = (state, filter) => {
+    switch (filter) {
+      case "all":
+        return state;
+      case "completed":
+        return state.filter(todo => todo.completed);
+      case "active":
+        return state.filter(todo => !todo.completed);
+      default:
+          throw new Error(`Unknown filter: ${filter}`)
+    }
+  };
+
+export const getVisibleTodos = (state, filter) => getVisibleTodosImpl(state.todos, filter)
+
 export const todoApp = combineReducers({
   todos,
 });

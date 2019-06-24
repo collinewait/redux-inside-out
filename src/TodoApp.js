@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { v4 } from "node-uuid";
 import FilterLink from "./FilterLink";
 import { withRouter } from "react-router-dom";
+import { getVisibleTodos } from "./todosReducer";
 
 const addTodo = text => ({
   type: "ADD_TODO",
@@ -27,16 +28,6 @@ const toggleTodo = id => ({
 //   mapStateToLinkProps,
 //   mapDispatchToLinkProps
 // )(Link);
-const getVisibleTodos = (todos, filter) => {
-  switch (filter) {
-    case "all":
-      return todos;
-    case "completed":
-      return todos.filter(todo => todo.completed);
-    case "active":
-      return todos.filter(todo => !todo.completed);
-  }
-};
 
 const Todo = ({ onClick, completed, text }) => (
   <li
@@ -59,7 +50,7 @@ const TodoList = ({ todos, toggleTodo }) => (
 );
 
 const mapStateToTodoListProps = (state, { match: { params } }) => ({
-  todos: getVisibleTodos(state.todos, params.filter || "all")
+  todos: getVisibleTodos(state, params.filter || "all")
 });
 // const mapDispatchToTodoListProps = dispatch => ({
 //   toggleTodo(id) {
