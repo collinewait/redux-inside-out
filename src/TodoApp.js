@@ -28,7 +28,10 @@ const requestTodos = filter => ({
   filter
 });
 
-const fetchTodos = filter => dispatch => {
+const fetchTodos = filter => (dispatch, getState) => {
+  if (getIsFetching(getState(), filter)) {
+    return;
+  }
   dispatch(requestTodos(filter));
   return api.fetchTodos(filter).then(response => {
     dispatch(receiveTodos(filter, response));

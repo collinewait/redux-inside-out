@@ -6,7 +6,7 @@ import { createStore, applyMiddleware } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 
 const thunk = store => next => action =>
-  typeof action === "function" ? action(store.dispatch) : next(action);
+  typeof action === "function" ? action(store.dispatch, store.getState) : next(action);
 
 const configureStore = () => {
   const middlewares = [thunk];
