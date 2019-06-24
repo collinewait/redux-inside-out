@@ -11,6 +11,8 @@ const listByFilter = combineReducers({
 export const getIsFetching = (state, filter) =>
   fromCreateList.getIsFetching(state.listByFilter[filter]);
 
+export const getErrorMessage = (state, filter) =>
+fromCreateList.getErrorMessage(state.listByFilter[filter]);
 export const getVisibleTodos = (state, filter) => {
   const ids = fromCreateList.getIds(state.listByFilter[filter]);
   return ids.map(id => fromById.getTodo(state.byId, id));
