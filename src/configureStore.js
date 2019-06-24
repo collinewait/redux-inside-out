@@ -64,18 +64,24 @@ import { composeWithDevTools } from "redux-devtools-extension";
 // console.log(store.getState())
 // console.log('-------------');
 
-// Now days we can easily use redux devtools
-const addPromiseSupportToDispatch = store => {
-  const next= store.dispatch; // next points to the dispatch returned by addLoggingToDispatch
-  return action => {
-    if (typeof action.then === "function") {
-      return action.then(next);
-    }
-    return next(action);
-  };
+// To make it a part of the middleware contract,
+// I can make next an outside argument, just like the
+// store before it and the action after it.
+
+// This way, the middleware becomes a function that
+// returns a function that returns a function, which is not
+// very common in JavaScript, but is actually very common in functional
+// programming languages, and this pattern is called Korean.
+const promise = store => next => action => {
+  if (typeof action.then === "function") {
+    return action.then(next);
+  }
+  return next(action);
 };
-const addLoggingToDispatch = store => {
-  const next = store.dispatch; // this next points to the original store dispatch
+
+// these are just functions with several arguments that are applied as
+// they become available
+const logger = store => next => {
   if (!console.group) {
     return next;
   }
@@ -90,6 +96,15 @@ const addLoggingToDispatch = store => {
   };
 };
 
+// middlewares are executed in a reverse order so in order to 
+// to execute promise first, we had to reverse the array for it 
+// to be the last item.
+const wrapDispatchWithMiddlewares = (store, middlewares) => {
+  middlewares.slice().reverse().forEach(
+    middleware => (store.dispatch = middleware(store)(store.dispatch))
+  );
+};
+
 const configureStore = () => {
   // We can pass the persisted state as the second argument to createStore
   // and it will override the value specified by the reducers
@@ -97,11 +112,12 @@ const configureStore = () => {
   // Passing the persisted state is fine since it was obtained from the store itself
   const store = createStore(todoApp);
 
+  const middlewares = [promise];
   if (process.env.NODE_ENV !== "production") {
-    store.dispatch = addLoggingToDispatch(store);
+    middlewares.push(logger);
   }
 
-  store.dispatch = addPromiseSupportToDispatch(store);
+  wrapDispatchWithMiddlewares(store, middlewares);
 
   return store;
 };
