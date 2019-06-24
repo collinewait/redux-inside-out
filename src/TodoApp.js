@@ -1,17 +1,22 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { v4 } from "node-uuid";
 import FilterLink from "./FilterLink";
 import { withRouter } from "react-router-dom";
-import { getVisibleTodos, getIsFetching, getErrorMessage } from "./todosReducer";
+import {
+  getVisibleTodos,
+  getIsFetching,
+  getErrorMessage
+} from "./todosReducer";
 import * as api from "./fakeRemote";
 import FetchError from "./FetchError";
 
-const addTodo = text => ({
-  type: "ADD_TODO",
-  id: v4(),
-  text
-});
+const addTodo = text => dispatch =>
+  api.addTodo(text).then(response => {
+    dispatch({
+      type: "ADD_TODO_SUCCESS",
+      response
+    });
+  });
 
 const toggleTodo = id => ({
   type: "TOGGLE_TODO",
