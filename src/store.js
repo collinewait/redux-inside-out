@@ -31,7 +31,22 @@ import { composeWithDevTools } from "redux-devtools-extension";
 // };
 
 //const store = createStore(counterReducer); // left out not to break counter and for demo. We use one store in applications
-const store = createStore(todoApp); 
+
+const persistedState = {
+  todos: [
+    {
+      id: 0,
+      text: "Welcome Back",
+      completed: false
+    }
+  ]
+};
+
+// We can pass the persisted state as the second argument to createStore
+// and it will override the value specified by the reducers
+// DO NOT pass the initial state to creeateStore, use it in reducers. 
+// Passing the persisted state is fine since it was obtained from the store itself
+const store = createStore(todoApp, persistedState); 
 
 // console.log('Initial State:');
 // console.log(store.getState())
