@@ -28,8 +28,12 @@ const requestTodos = filter => ({
   filter
 });
 
-const fetchTodos = filter =>
-  api.fetchTodos(filter).then(response => receiveTodos(filter, response));
+const fetchTodos = filter => dispatch => {
+  dispatch(requestTodos(filter));
+  return api.fetchTodos(filter).then(response => {
+    dispatch(receiveTodos(filter, response));
+  });
+};
 
 // const mapStateToLinkProps = (state, ownProps) => ({
 //   active: ownProps.filter === state.visibilityFilter
@@ -75,8 +79,7 @@ class VisibleTodoList extends Component {
   }
 
   fetchData() {
-    const { filter, fetchTodos, requestTodos } = this.props;
-    requestTodos(filter);
+    const { filter, fetchTodos } = this.props;
     fetchTodos(filter);
   }
   render() {
@@ -98,7 +101,7 @@ const mapStateToTodoListProps = (state, { match: { params } }) => {
 VisibleTodoList = withRouter(
   connect(
     mapStateToTodoListProps,
-    { toggleTodo, receiveTodos, fetchTodos, requestTodos }
+    { toggleTodo, receiveTodos, fetchTodos }
   )(VisibleTodoList)
 );
 
