@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { v4 } from "node-uuid";
 import FilterLink from "./FilterLink";
 import { withRouter } from "react-router-dom";
-import { getVisibleTodos } from "./todosReducer";
+import { getVisibleTodos, getIsFetching } from "./todosReducer";
 import * as api from "./fakeRemote";
 
 const addTodo = text => ({
@@ -21,6 +21,11 @@ const receiveTodos = (filter, response) => ({
   type: "RECEIVE_TODOS",
   filter,
   response
+});
+
+const requestTodos = filter => ({
+  type: "REQUEST_TODOS",
+  filter
 });
 
 const fetchTodos = filter =>
@@ -50,6 +55,14 @@ const Todo = ({ onClick, completed, text }) => (
   </li>
 );
 
+const TodoList = ({ todos, toggleTodo }) => (
+  <ul>
+    {todos &&
+      todos.map(todo => (
+        <Todo key={todo.id} {...todo} onClick={() => toggleTodo(todo.id)} />
+      ))}
+  </ul>
+);
 class VisibleTodoList extends Component {
   componentDidMount() {
     this.fetchData();
@@ -62,40 +75,30 @@ class VisibleTodoList extends Component {
   }
 
   fetchData() {
-    const { filter, fetchTodos } = this.props;
+    const { filter, fetchTodos, requestTodos } = this.props;
+    requestTodos(filter);
     fetchTodos(filter);
   }
   render() {
-    const { toggleTodo, ...rest } = this.props;
-    return <TodoList {...rest} toggleTodo={toggleTodo} />;
+    const { toggleTodo, todos, isFetching } = this.props;
+    if (isFetching && !todos.length) {
+      return <p>Loading...</p>;
+    }
+    return <TodoList todos={todos} toggleTodo={toggleTodo} />;
   }
 }
-
-const TodoList = ({ todos, toggleTodo }) => (
-  <ul>
-    {todos &&
-      todos.map(todo => (
-        <Todo key={todo.id} {...todo} onClick={() => toggleTodo(todo.id)} />
-      ))}
-  </ul>
-);
-
 const mapStateToTodoListProps = (state, { match: { params } }) => {
   const filter = params.filter || "all";
   return {
     todos: getVisibleTodos(state, filter),
+    isFetching: getIsFetching(state, filter),
     filter
   };
 };
-// const mapDispatchToTodoListProps = dispatch => ({
-//   toggleTodo(id) {
-//     dispatch(toggleTodo(id));
-//   }
-// });
 VisibleTodoList = withRouter(
   connect(
     mapStateToTodoListProps,
-    { toggleTodo, receiveTodos, fetchTodos }
+    { toggleTodo, receiveTodos, fetchTodos, requestTodos }
   )(VisibleTodoList)
 );
 

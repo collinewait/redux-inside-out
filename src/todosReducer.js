@@ -8,20 +8,16 @@ const listByFilter = combineReducers({
   completed: createList("completed")
 });
 
-const todos = combineReducers({
-  // You can use several combineReducers in several places
-  byId,
-  listByFilter
-});
+export const getIsFetching = (state, filter) =>
+  fromCreateList.getIsFetching(state.listByFilter[filter]);
 
-export const getVisibleTodosImpl = (state, filter) => {
+export const getVisibleTodos = (state, filter) => {
   const ids = fromCreateList.getIds(state.listByFilter[filter]);
   return ids.map(id => fromById.getTodo(state.byId, id));
 };
 
-export const getVisibleTodos = (state, filter) =>
-  getVisibleTodosImpl(state.todos, filter);
 
 export const todoApp = combineReducers({
-  todos
+  byId,
+  listByFilter
 });
